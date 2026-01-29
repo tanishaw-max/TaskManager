@@ -34,23 +34,8 @@ const allowedOrigins = (process.env.CORS_ORIGIN || "")
 // - same-origin / server-to-server (no Origin header)
 app.use(
   cors({
-    origin(origin, cb) {
-      if (!origin) return cb(null, true);
-
-      // Local development
-      if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
-        return cb(null, true);
-      }
-
-      // Explicitly allowed origins from env
-      if (allowedOrigins.includes(origin)) return cb(null, true);
-
-      // Any Vercel deployment
-      if (/^https:\/\/.*\.vercel\.app$/i.test(origin)) return cb(null, true);
-
-      return cb(new Error(`CORS blocked for origin: ${origin}`));
-    },
-    credentials: true,
+    origin: true, // Allow all origins for now  // CORS_ORIGIN=http://localhost:3000,http://localhost:5173,https://task-manager-qv7e.onrender.com 
+    credentials: true, // Allow credentials (cookies, authorization headers)
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     optionsSuccessStatus: 204,

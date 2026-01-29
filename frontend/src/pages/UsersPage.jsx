@@ -74,15 +74,15 @@ const UsersPage = () => {
   };
 
   const handleEdit = (user) => {
-    // Keep original user data for placeholders, but start with empty editable fields
+    // Keep original user data for placeholders, but start with current values for editing
     setEditingUserId(user._id);
     setEditingBaseUser(user);
     setForm({
-      username: "",
-      email: "",
+      username: user.username || "",
+      email: user.email || "",
       password: "",
-      phone: "",
-      address: "",
+      phone: user.phone || "",
+      address: user.address || "",
       roleTitle: user.roleId?.roleTitle || "user",
       isActive: user.isActive,
     });
@@ -97,13 +97,18 @@ const UsersPage = () => {
     try {
       const updateData = {};
 
-      // Only send fields that user actually typed (non-empty strings)
-      ["username", "phone", "address", "password"].forEach((field) => {
+      // Only send fields that user actually changed
+      ["username", "phone", "address"].forEach((field) => {
         const value = form[field];
-        if (typeof value === "string" && value.trim() !== "") {
+        if (typeof value === "string" && value.trim() !== "" && value.trim() !== editingBaseUser[field]) {
           updateData[field] = value.trim();
         }
       });
+
+      // Handle password separately - only if provided
+      if (form.password && form.password.trim() !== "") {
+        updateData.password = form.password.trim();
+      }
 
       // Role is always controlled by the select
       updateData.roleTitle = form.roleTitle;
@@ -200,11 +205,13 @@ const UsersPage = () => {
                   id="email"
                   name="email"
                   type="email"
-                  value={form.email}
-                  onChange={handleChange}
+                  value={editingUserId ? editingBaseUser?.email || "" : form.email}
+                  onChange={editingUserId ? undefined : handleChange}
                   autoComplete="off"
-                  placeholder={editingUserId ? editingBaseUser?.email || "" : ""}
+                  placeholder={editingUserId ? "" : ""}
                   required={!editingUserId}
+                  readOnly={editingUserId}
+                  style={editingUserId ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
                 />
               </div>
               <div className="form-group">

@@ -42,6 +42,7 @@ const ensureDefaultRoles = async () => {
 ====================== */
 router.post("/register", async (req, res) => {
   try {
+    console.log("Register request body:", req.body);
     await ensureDefaultRoles();
 
     const {
@@ -55,6 +56,7 @@ router.post("/register", async (req, res) => {
     } = req.body;
 
     if (!username || !email || !password || !phone || !address) {
+      console.log("Missing required fields:", { username: !!username, email: !!email, password: !!password, phone: !!phone, address: !!address });
       return res.status(400).json({
         message: "All fields are required",
       });
@@ -130,9 +132,11 @@ router.post("/register", async (req, res) => {
 ====================== */
 router.post("/login", async (req, res) => {
   try {
+    console.log("Login request body:", req.body);
     const { email, password } = req.body;
 
     if (!email || !password) {
+      console.log("Missing login fields:", { email: !!email, password: !!password });
       return res.status(400).json({
         message: "Email and password are required",
       });
