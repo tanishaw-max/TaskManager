@@ -108,7 +108,7 @@ router.post("/", protect, allowRoles("super-admin"), async (req, res) => {
 router.put("/:id", protect, allowRoles("super-admin"), async (req, res) => {
   try {
     const { id } = req.params;
-    const { username, phone, address, roleTitle, isActive } = req.body;
+    const { username,phone, address, roleTitle, isActive} = req.body;
 
     const user = await User.findById(id);
     if (!user || user.isDeleted) {

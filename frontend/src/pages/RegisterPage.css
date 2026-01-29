@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background-color: #020617;
+  background-color: #f3f4f6;
 }
 
 .register-card {
@@ -12,10 +12,10 @@
   max-width: 480px;
   padding: 2rem;
   border-radius: 1.25rem;
-  background-color: #020617;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  color: #e5e7eb;
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e5e7eb;
+  color: #111827;
 }
 
 .register-header h1 {
@@ -30,10 +30,7 @@
   font-size: clamp(1.5rem, 5vw, 2.35rem); /* scales automatically */
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: transparent;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: #2563eb;
 }
 
 
@@ -42,9 +39,9 @@
   height: 40px;
   border-radius: 14px;
   display: inline-block;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.95), rgba(99, 102, 241, 0.95));
-  box-shadow: 0 14px 34px rgba(59, 130, 246, 0.35);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: #2563eb;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+  border: none;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20fill%3D%27%23000%27%20d%3D%27M7%207a3%203%200%201%201%200%206a3%203%200%200%201%200-6Zm10%2010a3%203%200%201%201%200%206a3%203%200%200%201%200-6ZM17%203a3%203%200%201%201%200%206a3%203%200%200%201%200-6ZM8.8%2012.2l6.4%203.6l1-1.7l-6.4-3.6l-1%201.7Zm6.4-4L8.8%2011.8l1%201.7l6.4-3.6l-1-1.7Z%27/%3E%3C/svg%3E");
   mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20fill%3D%27%23000%27%20d%3D%27M7%207a3%203%200%201%201%200%206a3%203%200%200%201%200-6Zm10%2010a3%203%200%201%201%200%206a3%203%200%200%201%200-6ZM17%203a3%203%200%201%201%200%206a3%203%200%200%201%200-6ZM8.8%2012.2l6.4%203.6l1-1.7l-6.4-3.6l-1%201.7Zm6.4-4L8.8%2011.8l1%201.7l6.4-3.6l-1-1.7Z%27/%3E%3C/svg%3E");
   -webkit-mask-repeat: no-repeat;
@@ -58,7 +55,7 @@
 .register-header p {
   margin-top: 0.4rem;
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .register-form {
@@ -76,22 +73,22 @@
 
 .form-group label {
   font-size: 0.85rem;
-  color: #d1d5db;
+  color: #4b5563;
 }
 
 .form-group input {
   padding: 0.6rem 0.8rem;
   border-radius: 0.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.8);
-  color: #e5e7eb;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
   font-size: 0.9rem;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
 }
 
 .primary-btn {

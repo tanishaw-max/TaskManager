@@ -4,17 +4,13 @@
 
 .tasks-header h1 {
   margin: 0;
-  color: #f9fafb;
   font-size: 2rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #111827;
 }
 
 .tasks-header p {
   margin-top: 0.4rem;
-  color: #9ca3af;
+  color: #4b5563;
   font-size: 0.95rem;
 }
 
@@ -29,9 +25,9 @@
 .tasks-list-card {
   padding: 1.5rem;
   border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.08);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -44,7 +40,7 @@
 .tasks-list-card h2 {
   margin: 0 0 1rem;
   font-size: 1.05rem;
-  color: #e5e7eb;
+  color: #111827;
 }
 
 .task-form {
@@ -67,7 +63,7 @@
 
 .field label {
   font-size: 0.85rem;
-  color: #d1d5db;
+  color: #4b5563;
 }
 
 .field input,
@@ -75,9 +71,9 @@
 .field select {
   padding: 0.65rem 0.85rem;
   border-radius: 0.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.8);
-  color: #e5e7eb;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
   font-size: 0.9rem;
   transition: all 0.2s;
 }
@@ -86,8 +82,8 @@
 .field textarea:focus,
 .field select:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
   transform: translateY(-1px);
 }
 
@@ -103,15 +99,15 @@
 .task-item {
   padding: 1.25rem;
   border-radius: 0.9rem;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   transition: all 0.2s;
 }
 
 .task-item:hover {
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: #2563eb;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .task-item-header {
@@ -124,19 +120,19 @@
 .task-item-header h3 {
   margin: 0;
   font-size: 1rem;
-  color: #e5e7eb;
+  color: #111827;
 }
 
 .task-meta {
   margin: 0.2rem 0 0;
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .task-desc {
   margin: 0.5rem 0 0.8rem;
   font-size: 0.9rem;
-  color: #d1d5db;
+  color: #4b5563;
 }
 
 .task-actions {
@@ -149,24 +145,24 @@
 .status-select {
   padding: 0.5rem 0.75rem;
   border-radius: 0.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .status-select:hover {
-  border-color: #38bdf8;
+  border-color: #2563eb;
 }
 
 .edit-btn {
   padding: 0.5rem 0.75rem;
   border-radius: 0.6rem;
-  border: 1px solid rgba(59, 130, 246, 0.7);
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
+  border: 1px solid rgba(37, 99, 235, 0.4);
+  background: #eff6ff;
+  color: #1d4ed8;
   font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -180,9 +176,9 @@
 .delete-btn {
   padding: 0.5rem 0.75rem;
   border-radius: 0.6rem;
-  border: 1px solid rgba(248, 113, 113, 0.7);
-  background: rgba(220, 38, 38, 0.15);
-  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  background: #fef2f2;
+  color: #b91c1c;
   font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -203,9 +199,9 @@
 .edit-textarea {
   padding: 0.6rem 0.75rem;
   border-radius: 0.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
   font-size: 0.9rem;
   font-family: inherit;
 }
@@ -213,8 +209,8 @@
 .edit-input:focus,
 .edit-textarea:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .edit-actions {
@@ -257,10 +253,10 @@
 .status-history {
   margin-top: 1rem;
   padding: 0.75rem;
-  background: rgba(15, 23, 42, 0.5);
+  background: #f9fafb;
   border-radius: 0.5rem;
   font-size: 0.85rem;
-  border-left: 3px solid #3b82f6;
+  border-left: 3px solid #2563eb;
 }
 
 .status-history strong {

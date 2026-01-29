@@ -12,7 +12,8 @@ const UsersPage = () => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [editingBaseUser, setEditingBaseUser] = useState(null);
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -73,15 +74,17 @@ const UsersPage = () => {
   };
 
   const handleEdit = (user) => {
-    setEditingUser(user._id);
+    // Keep original user data for placeholders, but start with empty editable fields
+    setEditingUserId(user._id);
+    setEditingBaseUser(user);
     setForm({
-      username: user.username,
-      email: user.email,
-      phone: user.phone,
-      address: user.address,
+      username: "",
+      email: "",
+      password: "",
+      phone: "",
+      address: "",
       roleTitle: user.roleId?.roleTitle || "user",
       isActive: user.isActive,
-      password: "", // Don't pre-fill password
     });
     setShowForm(true);
   };
@@ -92,13 +95,28 @@ const UsersPage = () => {
     setError("");
     setSuccess("");
     try {
-      const updateData = { ...form };
-      if (!updateData.password) {
-        delete updateData.password; // Don't send empty password
+      const updateData = {};
+
+      // Only send fields that user actually typed (non-empty strings)
+      ["username", "email", "phone", "address", "password"].forEach((field) => {
+        const value = form[field];
+        if (typeof value === "string" && value.trim() !== "") {
+          updateData[field] = value.trim();
+        }
+      });
+
+      // Role is always controlled by the select
+      updateData.roleTitle = form.roleTitle;
+
+      // Only send isActive if it actually changed
+      if (editingBaseUser && form.isActive !== editingBaseUser.isActive) {
+        updateData.isActive = form.isActive;
       }
-      await api.updateUser(editingUser, updateData);
+
+      await api.updateUser(editingUserId, updateData);
       setSuccess("User updated successfully!");
-      setEditingUser(null);
+      setEditingUserId(null);
+      setEditingBaseUser(null);
       setShowForm(false);
       setForm({
         username: "",
@@ -130,7 +148,8 @@ const UsersPage = () => {
 
   const handleCancel = () => {
     setShowForm(false);
-    setEditingUser(null);
+    setEditingUserId(null);
+    setEditingBaseUser(null);
     setForm({
       username: "",
       email: "",
@@ -157,10 +176,10 @@ const UsersPage = () => {
         </div>
       </div>
 
-      {(showForm || editingUser) && isSuperAdmin && (
+      {(showForm || editingUserId) && isSuperAdmin && (
         <section className="user-form-card">
-          <h2>{editingUser ? "Edit User" : "Create User"}</h2>
-          <form onSubmit={editingUser ? handleUpdate : handleCreate} autoComplete="off">
+          <h2>{editingUserId ? "Edit User" : "Create User"}</h2>
+          <form onSubmit={editingUserId ? handleUpdate : handleCreate} autoComplete="off">
             <div className="form-grid">
               <div className="form-group">
                 <label htmlFor="username">Username</label>
@@ -171,7 +190,8 @@ const UsersPage = () => {
                   value={form.username}
                   onChange={handleChange}
                   autoComplete="off"
-                  required
+                  placeholder={editingUserId ? editingBaseUser?.username || "" : ""}
+                  required={!editingUserId}
                 />
               </div>
               <div className="form-group">
@@ -183,12 +203,13 @@ const UsersPage = () => {
                   value={form.email}
                   onChange={handleChange}
                   autoComplete="off"
-                  required
+                  placeholder={editingUserId ? editingBaseUser?.email || "" : ""}
+                  required={!editingUserId}
                 />
               </div>
               <div className="form-group">
                 <label htmlFor="password">
-                  Password {editingUser && "(leave empty to keep current)"}
+                  Password {editingUserId && "(leave empty to keep current)"}
                 </label>
                 <input
                   id="password"
@@ -197,7 +218,7 @@ const UsersPage = () => {
                   value={form.password}
                   onChange={handleChange}
                   autoComplete="new-password"
-                  required={!editingUser}
+                  required={!editingUserId}
                   minLength={6}
                 />
               </div>
@@ -210,7 +231,8 @@ const UsersPage = () => {
                   value={form.phone}
                   onChange={handleChange}
                   autoComplete="off"
-                  required
+                  placeholder={editingUserId ? editingBaseUser?.phone || "" : ""}
+                  required={!editingUserId}
                 />
               </div>
               <div className="form-group">
@@ -222,7 +244,8 @@ const UsersPage = () => {
                   value={form.address}
                   onChange={handleChange}
                   autoComplete="off"
-                  required
+                  placeholder={editingUserId ? editingBaseUser?.address || "" : ""}
+                  required={!editingUserId}
                 />
               </div>
               <div className="form-group">

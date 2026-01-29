@@ -7,17 +7,13 @@
 
 .users-header h1 {
   margin: 0;
-  color: #f9fafb;
   font-size: 2rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #111827;
 }
 
 .users-header p {
   margin-top: 0.4rem;
-  color: #9ca3af;
+  color: #4b5563;
   font-size: 0.95rem;
 }
 
@@ -26,14 +22,14 @@
   margin-top: 1.5rem;
   padding: 1.5rem;
   border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.08);
 }
 
 .user-form-card h2 {
   margin: 0 0 1.5rem;
-  color: #e5e7eb;
+  color: #111827;
   font-size: 1.25rem;
 }
 
@@ -52,7 +48,7 @@
 
 .form-group label {
   font-size: 0.85rem;
-  color: #d1d5db;
+  color: #4b5563;
   font-weight: 500;
 }
 
@@ -60,9 +56,9 @@
 .form-group select {
   padding: 0.6rem 0.75rem;
   border-radius: 0.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.8);
-  color: #e5e7eb;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
   font-size: 0.9rem;
   transition: all 0.2s;
 }
@@ -70,8 +66,8 @@
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .checkbox-label {
@@ -149,7 +145,7 @@
 
 .users-header-row {
   border-bottom: 2px solid rgba(148, 163, 184, 0.4);
-  color: #d1d5db;
+  color: #4b5563;
   font-weight: 600;
   font-size: 0.85rem;
   text-transform: uppercase;
@@ -157,12 +153,12 @@
 }
 
 .users-row {
-  border-bottom: 1px solid rgba(30, 64, 175, 0.2);
+  border-bottom: 1px solid #e5e7eb;
   transition: background 0.2s;
 }
 
 .users-row:hover {
-  background: rgba(59, 130, 246, 0.05);
+  background: #eff6ff;
   border-radius: 0.5rem;
 }
 
@@ -177,18 +173,18 @@
 }
 
 .role-super-admin {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  color: white;
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .role-manager {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 
 .role-user {
-  background: linear-gradient(135deg, #4f46e5, #4338ca);
-  color: white;
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .status-active {
@@ -228,9 +224,9 @@
 }
 
 .delete-user-btn {
-  background: rgba(220, 38, 38, 0.15);
-  color: #fecaca;
-  border: 1px solid rgba(220, 38, 38, 0.3);
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid rgba(220, 38, 38, 0.5);
 }
 
 .delete-user-btn:hover {

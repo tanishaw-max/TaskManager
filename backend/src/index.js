@@ -30,13 +30,24 @@ const allowedOrigins = (process.env.CORS_ORIGIN || "")
 // Allows:
 // - explicit origins via CORS_ORIGIN="https://foo.vercel.app,https://bar.com"
 // - any *.vercel.app (covers preview + production deployments)
+// - common localhost dev URLs
 // - same-origin / server-to-server (no Origin header)
 app.use(
   cors({
     origin(origin, cb) {
       if (!origin) return cb(null, true);
+
+      // Local development
+      if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
+        return cb(null, true);
+      }
+
+      // Explicitly allowed origins from env
       if (allowedOrigins.includes(origin)) return cb(null, true);
+
+      // Any Vercel deployment
       if (/^https:\/\/.*\.vercel\.app$/i.test(origin)) return cb(null, true);
+
       return cb(new Error(`CORS blocked for origin: ${origin}`));
     },
     credentials: true,

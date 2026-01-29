@@ -1,9 +1,7 @@
 .dashboard {
-  margin-left: 260px; /* sidebar width */
   padding: 1.5rem;
   min-height: 100vh;
 }
-
 .dashboard-header {
   margin-bottom: 1.5rem;
 }
@@ -11,15 +9,12 @@
 .dashboard-header h1 {
   margin: 0;
   font-size: 1.75rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #111827;
 }
 
 .dashboard-header p {
   margin-top: 0.4rem;
-  color: #e5e7eb;
+  color: #4b5563;
   font-size: 0.95rem;
 }
 
@@ -33,8 +28,8 @@
 .stat-card {
   padding: 1.25rem;
   border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -51,16 +46,13 @@
 .stat-card h2 {
   margin: 0;
   font-size: 0.9rem;
-  color: #e5e7eb;
+  color: #4b5563;
 }
 
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2563eb;
 }
 
 .stat-total .stat-value {
@@ -106,8 +98,8 @@
 .rule-column {
   padding: 1.25rem;
   border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   transition: all 0.2s;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -121,14 +113,14 @@
 .rule-column h3 {
   margin: 0 0 0.5rem;
   font-size: 1rem;
-  color: #f9fafb;
+  color: #111827;
 }
 
 .rule-column ul {
   margin: 0;
   padding-left: 1rem;
   font-size: 0.9rem;
-  color: #d1d5db;
+  color: #4b5563;
 }
 
 @media (max-width: 1024px) {
