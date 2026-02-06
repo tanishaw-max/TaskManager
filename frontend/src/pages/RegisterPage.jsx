@@ -18,7 +18,14 @@ const RegisterPage = () => {
   const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    if (name === "phone") {
+      if (value.length <= 10 && /^\d*$/.test(value)) {
+        setForm((prev) => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -30,7 +37,7 @@ const RegisterPage = () => {
       const res = await api.register(form);
       setSuccess("Registration successful! Logging you in...");
       login(res.data.user, res.data.token);
-      setTimeout(() => navigate("/"), 1000);
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {
@@ -83,7 +90,7 @@ const RegisterPage = () => {
             { id: "username", label: "Username", type: "text", ph: "johndoe" },
             { id: "email", label: "Email", type: "email", ph: "you@example.com" },
             { id: "password", label: "Password", type: "password", ph: "••••••••" },
-            { id: "phone", label: "Phone", type: "tel", ph: "1234567890" },
+            { id: "phone", label: "Phone", type: "tel", ph: "1234567890", pattern: "[0-9]{10}", maxLength: 10 },
             { id: "address", label: "Address", type: "text", ph: "123 Main St, City" },
           ].map((f) => (
             <div key={f.id} className="flex flex-col gap-[0.4rem]">
@@ -96,6 +103,8 @@ const RegisterPage = () => {
                 value={form[f.id]}
                 onChange={handleChange}
                 required
+                pattern={f.pattern}
+                maxLength={f.maxLength}
                 className="px-[0.8rem] py-[0.6rem] rounded-[0.6rem] border border-[#d1d5db]
                   bg-white text-[#111827] text-[0.9rem]
                   focus:outline-none focus:border-[#2563eb]
