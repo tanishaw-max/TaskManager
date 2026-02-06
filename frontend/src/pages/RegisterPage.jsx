@@ -29,12 +29,8 @@ const RegisterPage = () => {
     try {
       const res = await api.register(form);
       setSuccess("Registration successful! Logging you in...");
-      if (res.data.token && res.data.user) {
-        login(res.data.user, res.data.token);
-        setTimeout(() => navigate("/"), 1000);
-      } else {
-        navigate("/login");
-      }
+      login(res.data.user, res.data.token);
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {
@@ -43,17 +39,17 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-[1.5rem] bg-[#f3f4f6]">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#f3f4f6]">
       <div
-        className="w-full max-w-[480px] p-[2rem] rounded-[1.25rem] bg-white text-[#111827]
+        className="w-full max-w-120 p-8 rounded-[1.25rem] bg-white text-[#111827]
           shadow-[0_10px_30px_rgba(15,23,42,0.12)] border border-[#e5e7eb]
-          max-[480px]:p-[1.5rem]"
+          max-[480px]:p-6"
       >
         {/* Header */}
         <div>
           <h1 className="inline-flex items-center gap-[0.6rem] whitespace-nowrap">
             <span
-              className="inline-block w-[40px] h-[40px] rounded-[14px] bg-[#2563eb]
+              className="inline-block w-10 h-10 rounded-[14px] bg-[#2563eb]
                 shadow-[0_10px_24px_rgba(37,99,235,0.35)]"
               style={{
                 WebkitMaskImage:
@@ -69,7 +65,7 @@ const RegisterPage = () => {
               }}
               aria-hidden="true"
             />
-            <span className="text-[clamp(1.5rem,5vw,2.35rem)] font-[900] tracking-[-0.03em] text-[#2563eb]">
+            <span className="text-[clamp(1.5rem,5vw,2.35rem)] font-black tracking-[-0.03em] text-[#2563eb]">
               Task Manager
             </span>
           </h1>
@@ -81,7 +77,7 @@ const RegisterPage = () => {
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="mt-[1.5rem] flex flex-col gap-[1rem]"
+          className="mt-6 flex flex-col gap-4"
         >
           {[
             { id: "username", label: "Username", type: "text", ph: "johndoe" },
@@ -115,12 +111,12 @@ const RegisterPage = () => {
 
           <button
             disabled={loading}
-            className="w-full mt-[0.5rem] px-[1rem] py-[0.7rem] rounded-[0.8rem]
-              bg-[#2563eb] text-[#f9fafb] font-[600]
-              transition-[transform,box-shadow,filter] duration-200
-              hover:brightness-105
+            className="w-full mt-2 px-4 py-3 rounded-lg
+              bg-blue-600 text-white font-semibold
+              transition-all duration-200
+              hover:brightness-110
               hover:shadow-[0_12px_30px_rgba(59,130,246,0.4)]
-              hover:-translate-y-[1px]
+              hover:-translate-y-0.5
               disabled:opacity-60 disabled:cursor-not-allowed
               disabled:shadow-none disabled:translate-y-0"
           >
@@ -128,11 +124,11 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        <p className="mt-[1rem] text-[0.8rem] text-[#9ca3af] text-center">
+        <p className="mt-4 text-sm text-gray-400 text-center">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-[#60a5fa] font-[500] hover:underline"
+            className="text-blue-400 font-medium hover:underline"
           >
             Sign in here
           </Link>
