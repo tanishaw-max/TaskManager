@@ -6,15 +6,28 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import TasksPage from "./pages/TasksPage";
+import ProjectsPage from "./pages/ProjectsPage";
 import UsersPage from "./pages/UsersPage";
 
 function PrivateRoute({ children }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  console.log("PrivateRoute -> user:", user);
+  console.log("PrivateRoute -> loading:", loading);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   if (!user) {
+    console.log("Redirecting to login");
     return <Navigate to="/login" replace />;
   }
+
   return children;
 }
+
+
 
 function App() {
   return (
@@ -36,6 +49,14 @@ function App() {
             element={
               <PrivateRoute>
                 <TasksPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <PrivateRoute>
+                <ProjectsPage />
               </PrivateRoute>
             }
           />

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import api from "../services/api";
 import { useAuth } from "../context/useAuth";
-import "./UsersPage.css";
 
 const UsersPage = () => {
   const { user } = useAuth();
@@ -14,8 +13,7 @@ const UsersPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingUserId, setEditingUserId] = useState(null);
   const [editingBaseUser, setEditingBaseUser] = useState(null);
-  
-  // Extract initial form state for reusability
+
   const initialFormState = {
     username: "",
     email: "",
@@ -25,9 +23,8 @@ const UsersPage = () => {
     roleTitle: "user",
     isActive: true,
   };
-  
-  const [form, setForm] = useState(initialFormState);
 
+  const [form, setForm] = useState(initialFormState);
   const isSuperAdmin = role === "super-admin";
 
   const loadUsers = async () => {
@@ -45,13 +42,9 @@ const UsersPage = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    setForm((p) => ({ ...p, [name]: type === "checkbox" ? checked : value }));
   };
 
-  // Extract form reset logic
   const resetForm = () => {
     setForm(initialFormState);
     setShowForm(false);
@@ -76,18 +69,17 @@ const UsersPage = () => {
     }
   };
 
-  const handleEdit = (user) => {
-    // Keep original user data for placeholders, but start with current values for editing
-    setEditingUserId(user._id);
-    setEditingBaseUser(user);
+  const handleEdit = (u) => {
+    setEditingUserId(u._id);
+    setEditingBaseUser(u);
     setForm({
-      username: user.username || "",
-      email: user.email || "",
+      username: u.username || "",
+      email: u.email || "",
       password: "",
-      phone: user.phone || "",
-      address: user.address || "",
-      roleTitle: user.roleId?.roleTitle || "user",
-      isActive: user.isActive,
+      phone: u.phone || "",
+      address: u.address || "",
+      roleTitle: u.roleId?.roleTitle || "user",
+      isActive: u.isActive,
     });
     setShowForm(true);
   };
@@ -99,27 +91,15 @@ const UsersPage = () => {
     setSuccess("");
     try {
       const updateData = {};
-
-      // Only send fields that user actually changed
-      ["username", "phone", "address"].forEach((field) => {
-        const value = form[field];
-        if (typeof value === "string" && value.trim() !== "" && value.trim() !== editingBaseUser[field]) {
-          updateData[field] = value.trim();
+      ["username", "phone", "address"].forEach((f) => {
+        if (form[f]?.trim() && form[f] !== editingBaseUser[f]) {
+          updateData[f] = form[f].trim();
         }
       });
-
-      // Handle password separately - only if provided
-      if (form.password && form.password.trim() !== "") {
-        updateData.password = form.password.trim();
-      }
-
-      // Role is always controlled by the select
+      if (form.password?.trim()) updateData.password = form.password.trim();
       updateData.roleTitle = form.roleTitle;
-
-      // Only send isActive if it actually changed
-      if (editingBaseUser && form.isActive !== editingBaseUser.isActive) {
+      if (form.isActive !== editingBaseUser.isActive)
         updateData.isActive = form.isActive;
-      }
 
       await api.updateUser(editingUserId, updateData);
       setSuccess("User updated successfully!");
@@ -143,16 +123,14 @@ const UsersPage = () => {
     }
   };
 
-  const handleCancel = () => {
-    resetForm();
-  };
-
   return (
     <Layout>
-      <div className="users-header">
+      <div className="flex justify-between items-start gap-4 mb-8 p-6 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] rounded-2xl text-white shadow-[0_8px_32px_rgba(102,126,234,0.3)] max-[1024px]:flex-col max-[1024px]:text-center">
         <div>
-          <h1>Users</h1>
-          <p>
+          <h1 className="m-0 text-[2rem] font-bold [text-shadow:0_2px_4px_rgba(0,0,0,0.1)] max-[768px]:text-[1.5rem]">
+            Users
+          </h1>
+          <p className="mt-2 opacity-90">
             {role === "super-admin" &&
               "Manage all users: create, update, and delete accounts."}
             {role === "manager" &&
@@ -162,115 +140,63 @@ const UsersPage = () => {
         </div>
       </div>
 
+      {isSuperAdmin && (
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={() => setShowForm(true)}
+            className="w-full px-8 py-4 rounded-xl bg-[linear-gradient(135deg,#3b82f6,#2563eb)] text-white font-semibold transition-all hover:-translate-y-[2px] hover:shadow-[0_8px_20px_rgba(59,130,246,0.4)] flex  gap-2"
+          >
+            ➕ Add User
+          </button>
+        </div>
+      )}
+
       {(showForm || editingUserId) && isSuperAdmin && (
-        <section className="user-form-card">
-          <h2>{editingUserId ? "Edit User" : "Create User"}</h2>
-          <form onSubmit={editingUserId ? handleUpdate : handleCreate} autoComplete="off">
-            <div className="form-grid">
-              <div className="form-group">
-                <label htmlFor="username">Username</label>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={form.username}
-                  onChange={handleChange}
-                  autoComplete="off"
-                  placeholder={editingUserId ? editingBaseUser?.username || "" : ""}
-                  required={!editingUserId}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={editingUserId ? editingBaseUser?.email || "" : form.email}
-                  onChange={editingUserId ? undefined : handleChange}
-                  autoComplete="off"
-                  placeholder={editingUserId ? "" : ""}
-                  required={!editingUserId}
-                  readOnly={editingUserId}
-                  style={editingUserId ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">
-                  Password {editingUserId && "(leave empty to keep current)"}
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  autoComplete="new-password"
-                  required={!editingUserId}
-                  minLength={6}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone">Phone</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={form.phone}
-                  onChange={handleChange}
-                  autoComplete="off"
-                  placeholder={editingUserId ? editingBaseUser?.phone || "" : ""}
-                  required={!editingUserId}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="address">Address</label>
-                <input
-                  id="address"
-                  name="address"
-                  type="text"
-                  value={form.address}
-                  onChange={handleChange}
-                  autoComplete="off"
-                  placeholder={editingUserId ? editingBaseUser?.address || "" : ""}
-                  required={!editingUserId}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="roleTitle">Role</label>
-                <select
-                  id="roleTitle"
-                  name="roleTitle"
-                  value={form.roleTitle}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="user">User</option>
-                  <option value="manager">Manager</option>
-                  <option value="super-admin">Super Admin</option>
-                </select>
-              </div>
-              {editingUserId && (
-                <div className="form-group">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      name="isActive"
-                      checked={form.isActive}
-                      onChange={handleChange}
-                    />
-                    Active
+        <section className="relative overflow-hidden mt-6 p-6 rounded-2xl bg-white border border-[#e5e7eb] shadow-[0_4px_8px_rgba(15,23,42,0.08)] transition-all hover:-translate-y-[2px] hover:shadow-[0_12px_24px_rgba(0,0,0,0.15)] before:absolute before:top-0 before:left-0 before:right-0 before:h-[4px] before:bg-[linear-gradient(90deg,#3b82f6,#8b5cf6)] before:scale-x-0 hover:before:scale-x-100 before:origin-left before:transition-transform">
+          <h2 className="mb-6 text-[#1e293b] text-xl font-semibold flex items-center gap-2">
+            👤 {editingUserId ? "Edit User" : "Create User"}
+          </h2>
+
+          <form onSubmit={editingUserId ? handleUpdate : handleCreate}>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5 mb-6">
+              {["username", "email", "password", "phone", "address"].map((field) => (
+                <div key={field} className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold text-[#374151] capitalize">
+                    {field}
                   </label>
+                  <input
+                    name={field}
+                    value={form[field]}
+                    onChange={handleChange}
+                    className="px-4 py-3 rounded-xl border-2 border-[#e5e7eb] transition-all hover:border-[#d1d5db] focus:border-[#3b82f6] focus:ring-[3px] focus:ring-[rgba(59,130,246,0.1)] focus:-translate-y-[1px]"
+                  />
                 </div>
-              )}
+              ))}
             </div>
-            {error && <div className="error-text">{error}</div>}
-            {success && <div className="success-text">{success}</div>}
-            <div className="form-actions">
-              <button type="submit" className="primary-btn" disabled={loading}>
+
+            {error && (
+              <div className="p-4 mb-6 rounded-xl bg-[linear-gradient(135deg,#fef2f2,#fee2e2)] border-2 border-[#fecaca] text-[#dc2626] font-medium flex items-center gap-2">
+                ⚠️ {error}
+              </div>
+            )}
+            {success && (
+              <div className="p-4 mb-6 rounded-xl bg-[linear-gradient(135deg,#f0fdf4,#dcfce7)] border-2 border-[#bbf7d0] text-[#16a34a] font-medium flex items-center gap-2">
+                ✅ {success}
+              </div>
+            )}
+
+            <div className="flex gap-4 justify-end max-[768px]:flex-col">
+              <button
+                disabled={loading}
+                className="px-6 py-3 rounded-xl bg-[linear-gradient(135deg,#3b82f6,#2563eb)] text-white font-semibold transition-all hover:-translate-y-[2px] hover:shadow-[0_8px_20px_rgba(59,130,246,0.4)]"
+              >
                 {loading ? "Saving..." : editingUserId ? "Update User" : "Create User"}
               </button>
-              <button type="button" className="secondary-btn" onClick={handleCancel}>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="px-6 py-3 rounded-xl border-2 border-[#e5e7eb] text-gray-500 transition-all hover:bg-[#f9fafb] hover:border-[#d1d5db] hover:-translate-y-[1px]"
+              >
                 Cancel
               </button>
             </div>
@@ -278,50 +204,47 @@ const UsersPage = () => {
         </section>
       )}
 
-      <section className="users-card">
-        {error && !showForm && <div className="error-text">{error}</div>}
-        {success && !showForm && <div className="success-text">{success}</div>}
-        <div className="users-table">
-          <div className="users-header-row">
-            <span>Name</span>
-            <span>Email</span>
-            <span>Role</span>
-            <span>Status</span>
-            {isSuperAdmin && <span>Actions</span>}
-          </div>
+      <section className="relative overflow-hidden mt-6 p-6 rounded-2xl bg-white border border-[#e5e7eb] shadow-[0_4px_8px_rgba(15,23,42,0.08)] transition-all hover:-translate-y-[2px] hover:shadow-[0_12px_24px_rgba(0,0,0,0.15)] before:absolute before:top-0 before:left-0 before:right-0 before:h-[4px] before:bg-[linear-gradient(90deg,#3b82f6,#8b5cf6)] before:scale-x-0 hover:before:scale-x-100 before:origin-left before:transition-transform">
+        <div className="grid grid-cols-[2fr_3fr_1.5fr_1fr_2fr] gap-5 p-4 rounded-xl bg-[linear-gradient(135deg,#f8fafc,#f1f5f9)] border-2 border-[#e2e8f0] uppercase tracking-wider font-bold text-sm text-[#374151] mb-4">
+          <span>Name</span>
+          <span>Email</span>
+          <span>Role</span>
+          <span>Status</span>
+          {isSuperAdmin && <span>Actions</span>}
+        </div>
+
+        <div className="flex flex-col gap-3">
           {users.map((u) => (
-            <div key={u._id} className="users-row">
+            <div
+              key={u._id}
+              className="grid grid-cols-[2fr_3fr_1.5fr_1fr_2fr] gap-5 p-4 rounded-xl bg-white border-2 border-[#f1f5f9] transition-all hover:bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] hover:border-[#bfdbfe] hover:translate-x-[4px] hover:shadow-[0_4px_12px_rgba(59,130,246,0.15)]"
+            >
               <span>{u.username}</span>
               <span>{u.email}</span>
-              <span className={`user-role-badge role-${u.roleId?.roleTitle?.toLowerCase()}`}>
-                {u.roleId?.roleTitle || "N/A"}
-              </span>
-              <span className={u.isActive ? "status-active" : "status-inactive"}>
+              <span>{u.roleId?.roleTitle}</span>
+              <span className={u.isActive ? "text-[#059669] font-semibold" : "text-[#dc2626] font-semibold"}>
                 {u.isActive ? "✓ Active" : "✗ Inactive"}
               </span>
               {isSuperAdmin && (
-                <span className="user-actions">
-                  <button className="edit-user-btn" onClick={() => handleEdit(u)}>
+                <span className="flex gap-3">
+                  <button
+                    onClick={() => handleEdit(u)}
+                    className="px-4 py-2 rounded-lg border-2 border-[#bfdbfe] bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] text-[#2563eb] text-xs font-semibold transition-all hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(37,99,235,0.3)]"
+                  >
                     ✏️ Edit
                   </button>
-                  <button className="delete-user-btn" onClick={() => handleDelete(u._id)}>
+                  <button
+                    onClick={() => handleDelete(u._id)}
+                    className="px-4 py-2 rounded-lg border-2 border-[#fecaca] bg-[linear-gradient(135deg,#fef2f2,#fee2e2)] text-[#dc2626] text-xs font-semibold transition-all hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(220,38,38,0.3)]"
+                  >
                     🗑️ Delete
                   </button>
                 </span>
               )}
             </div>
           ))}
-          {users.length === 0 && <p className="empty-text">No users to show.</p>}
         </div>
       </section>
-
-      {isSuperAdmin && (
-        <div className="add-user-section">
-          <button className="primary-btn" onClick={() => setShowForm(true)}>
-            + Add User
-          </button>
-        </div>
-      )}
     </Layout>
   );
 };

@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Role from "../models/Role.js";
+import mongoose from "mongoose";
+
+// Create a consistent ObjectId for admin user
+const ADMIN_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439011');
 
 
 
@@ -25,7 +29,7 @@ export const protect = async (req, res, next) => {
     // Handle hardcoded admin user
     if (decoded.id === "admin" && decoded.role === "super-admin") {
       req.user = {
-        id: "admin",
+        _id: ADMIN_USER_ID,
         username: "admin",
         email: "admin@taskmanager.com",
         role: "super-admin",
@@ -45,7 +49,7 @@ export const protect = async (req, res, next) => {
     }
 
     req.user = {
-      id: user._id,
+      _id: user._id,
       username: user.username,
       email: user.email,
       role: user.roleId?.roleTitle || "user",

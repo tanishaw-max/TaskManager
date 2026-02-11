@@ -47,10 +47,25 @@ export const getTasks = async (req, res) => {
 
     const tasks = await Task.find(filter)
       .populate({ path: "userId", select: "username email" })
+      .populate({ path: "projectId", select: "name description" })
       .populate({ path: "statusHistory.changedBy", select: "username email" })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
-    return res.json(tasks);
+    // Fix admin user display in statusHistory for all tasks
+    const fixedTasks = tasks.map(task => {
+      if (task.statusHistory) {
+        task.statusHistory = task.statusHistory.map(history => {
+          if (!history.changedBy && history.changedBy?.toString() === '507f1f77bcf86cd799439011') {
+            history.changedBy = { username: 'admin', email: 'admin@taskmanager.com' };
+          }
+          return history;
+        });
+      }
+      return task;
+    });
+
+    return res.json(fixedTasks);
   } catch (error) {
     console.error("Get tasks error:", error);
     return res.status(500).json({ message: "Server error" });
@@ -60,14 +75,27 @@ export const getTasks = async (req, res) => {
 // POST /api/tasks - create task
 export const createTask = async (req, res) => {
   try {
-    const { taskTitle, description, userId } = req.body;
+    const { taskTitle, description, userId, dueDate, projectId } = req.body;
 
     if (!taskTitle || !description) {
       return res
         .status(400)
         .json({ message: "Task title and description are required" });
     }
+    // ❗ Prevent past due dates
+    if (dueDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
+      const selectedDate = new Date(dueDate);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        return res.status(400).json({
+          message: "Due date cannot be in the past",
+        });
+      }
+    }
     const role = (req.user.role || "").toLowerCase();
     let targetUserId = userId || req.user.id;
 
@@ -92,7 +120,7 @@ export const createTask = async (req, res) => {
     }
     // super-admin can assign to any user
 
-    const task = await Task.create({
+    const taskData = {
       taskTitle,
       description,
       userId: targetUserId,
@@ -102,13 +130,44 @@ export const createTask = async (req, res) => {
         changedAt: new Date(),
         note: "Task created",
       }]
-    });
+    };
+
+    if (dueDate) taskData.dueDate = dueDate;
+    if (projectId) taskData.projectId = projectId;
+
+    const task = await Task.create(taskData);
 
     // Use single populate call for better performance
     const populatedTask = await Task.findById(task._id)
-      .populate({ path: "userId", select: "username email" })
-      .populate({ path: "statusHistory.changedBy", select: "username email" })
+      .populate({ 
+        path: "userId", 
+        select: "username email" 
+      })
+      .populate({ 
+        path: "projectId", 
+        select: "name description" 
+      })
+      .populate({ 
+        path: "statusHistory.changedBy", 
+        select: "username email",
+        transform: (doc) => {
+          if (!doc && task.statusHistory[0]?.changedBy?.toString() === '507f1f77bcf86cd799439011') {
+            return { username: 'admin', email: 'admin@taskmanager.com' };
+          }
+          return doc;
+        }
+      })
       .lean();
+
+    // Fix admin user display in statusHistory
+    if (populatedTask.statusHistory) {
+      populatedTask.statusHistory = populatedTask.statusHistory.map(history => {
+        if (!history.changedBy && history.changedBy?.toString() === '507f1f77bcf86cd799439011') {
+          history.changedBy = { username: 'admin', email: 'admin@taskmanager.com' };
+        }
+        return history;
+      });
+    }
 
     return res.status(201).json(populatedTask);
   } catch (error) {
@@ -166,6 +225,7 @@ export const updateTask = async (req, res) => {
     // Use single populate call for better performance
     const updatedTask = await Task.findById(task._id)
       .populate({ path: "userId", select: "username email" })
+      .populate({ path: "projectId", select: "name description" })
       .populate({ path: "statusHistory.changedBy", select: "username email" })
       .lean();
     

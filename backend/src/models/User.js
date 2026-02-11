@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
+      maxlength:[10,"Phone number atmost 10 digits"]
     },
     address: {
       type: String,

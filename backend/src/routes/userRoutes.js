@@ -17,12 +17,15 @@ router.post("/register", createUser); // assigns default "user" role
 //  Protected routes 
 // Get current user profile
 router.get("/me", protect, async (req, res) => {
-  const user = await User.findById(req.user.id).populate("roleId").select("-password");
+  const user = await User.findById(req.user._id).populate("roleId").select("-password");
   res.json(user);
 });
 
 // Get all users (role-based)
 router.get("/", protect, getAllUsers);
+
+// Create user (super-admin only)
+router.post("/", protect, allowRoles("super-admin"), createUser);
 
 // Get user by ID (super-admin only)
 router.get("/:id", protect, allowRoles("super-admin"), getUserById);

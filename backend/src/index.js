@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/projects", projectRoutes);
 app.use("/api/users", userRoutes);
 
 
@@ -52,6 +54,13 @@ app.use((err, req, res, next) => {
 });
 
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log(`Port ${PORT} is busy, trying ${PORT + 1}`);
+    server.listen(PORT + 1);
+  }
 });

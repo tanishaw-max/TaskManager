@@ -12,6 +12,7 @@ const generateToken = (user) =>
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
   );
+const emailRegex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
 
 export const register = async (req, res) => {
   try {
@@ -22,17 +23,16 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (!validator.isEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Email must be like riya12@gmail.com" });
     }
-
     if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
-    if (!validator.isMobilePhone(phone, 'any')) {
-      return res.status(400).json({ message: "Invalid phone number" });
-    }
+    if (!/^\d{10}$/.test(phone)) {
+    return res.status(400).json({ message: "Phone must be exactly 10 digits" });
+}
 
     // Sanitize inputs
     const sanitizedData = {
@@ -76,14 +76,14 @@ export const register = async (req, res) => {
       address: sanitizedData.address,
       roleId: userRole._id,
     });
-
+    const populatedUser = await user.populate("roleId");
     const token = generateToken(user);
 
     res.status(201).json({
       message: "User registered successfully",
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         username: user.username,
         email: user.email,
         role: "user",
@@ -106,8 +106,8 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    if (!validator.isEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Email must be like riya12@gmail.com" });
     }
     
     console.log('Login attempt:', { email: validator.normalizeEmail(email) });
@@ -126,7 +126,7 @@ export const login = async (req, res) => {
         message: "Admin login successful",
         token,
         user: {
-          id: "admin",
+          _id: "admin",
           username: "admin",
           email: "admin@taskmanager.com",
           role: "super-admin",
@@ -139,8 +139,22 @@ export const login = async (req, res) => {
       .select("+password")
       .populate("roleId");
 
-    if (!user || !(await user.comparePassword(password))) {
-      console.log('Invalid credentials for:', normalizedEmail);
+    if (!user) {
+      console.log('User not found:', normalizedEmail);
+      return res.status(400).json({
+        message: "User not found",
+      });
+    }
+
+    if (user.isDeleted) {
+      console.log('User is deleted:', normalizedEmail);
+      return res.status(400).json({
+        message: "User not found",
+      });
+    }
+
+    if (!(await user.comparePassword(password))) {
+      console.log('Invalid password for:', normalizedEmail);
       return res.status(400).json({
         message: "Invalid credentials",
       });
@@ -158,11 +172,12 @@ export const login = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         username: user.username,
         email: user.email,
         role: user.roleId?.roleTitle,
       },
+      
     });
   } catch (error) {
     console.error('Login error:', error);

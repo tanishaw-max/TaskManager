@@ -63,6 +63,12 @@ const api = {
   createUser: (data) => instance.post("/api/users", data),
   updateUser: (id, data) => instance.put(`/api/users/${id}`, data),
   deleteUser: (id) => instance.delete(`/api/users/${id}`),
+
+  // PROJECTS
+  getProjects: () => instance.get("/api/projects"),
+  createProject: (data) => instance.post("/api/projects", data),
+  updateProject: (id, data) => instance.put(`/api/projects/${id}`, data),
+  deleteProject: (id) => instance.delete(`/api/projects/${id}`),
 };
 
 export default api;
